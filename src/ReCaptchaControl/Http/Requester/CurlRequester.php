@@ -49,7 +49,10 @@ class CurlRequester implements IRequester
 		$response = curl_exec($ch);
 		$errno = curl_errno($ch);
 		$error = curl_error($ch);
-		curl_close($ch);
+		// a no-op since PHP 8.0 (handles close on scope exit) and deprecated in 8.5
+		if (PHP_VERSION_ID < 80000) {
+			curl_close($ch);
+		}
 
 		if ($errno === 0 && is_string($response)) {
 			return $response;
